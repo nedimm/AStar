@@ -33,6 +33,7 @@ set(RESOURCE_FILES
 
 add_executable( AStar ${SOURCE_FILES} ${RESOURCE_FILES})
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT AStar)
+set_property(TARGET ${PROJECT_NAME} PROPERTY VS_DEBUGGER_WORKING_DIRECTORY "$(SolutionDir)$(Configuration)")
 
 target_link_libraries( AStar ${OpenCV_LIBS} )
 
