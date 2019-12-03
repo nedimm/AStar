@@ -27,12 +27,12 @@ class AStar {
 public:
 	AStar(std::shared_ptr<Graph> graph, Node& start, Node& end);
     void search();
+	float calculateEstimatedDistance(Node& from_node, Node& to_node);
 
 protected:
     std::shared_ptr<Graph> _graph;
     Node& _start;
     Node& _goal;
     PriorityQueue<int, double> frontier;
-    std::unordered_map<int, int> came_from;
-    std::unordered_map<int, double> cost_so_far;
+	float _movement_cost = 1;
 };

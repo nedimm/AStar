@@ -4,8 +4,8 @@
 
 struct Node
 {
-	bool operator == (const Node& o) { return x_index == o.x_index && y_index == o.y_index; }
-	bool operator < (const Node& o) { return distance + cost < o.distance + o.cost; }
+	//bool operator == (const Node& o) { return x_index == o.x_index && y_index == o.y_index; }
+	//bool operator < (const Node& o) { return distance + cost_so_far < o.distance + o.cost_so_far; }
     float x_pos;
     float y_pos;
     int x_index;
@@ -13,8 +13,9 @@ struct Node
     int index_1d;
     std::vector<int> neighbors_1d;
 	int parent_index_1d;
-	float distance; //h(n)
-	float cost; //g(n)
+	int came_from_1d;
+	float estimated_distance; //h(n)
+	float cost_so_far; //g(n)
 };
 
 class Graph
