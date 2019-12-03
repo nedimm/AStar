@@ -25,14 +25,18 @@ struct PriorityQueue {
 
 class AStar {
 public:
-	AStar(std::shared_ptr<Graph> graph, Node& start, Node& end);
+	AStar(std::shared_ptr<Graph> graph, Node& start, Node& end, cv::Mat& map_image);
     void search();
-	float calculateEstimatedDistance(Node& from_node, Node& to_node);
+	float heuristic(Node& from_node) const;
 
 protected:
+    void _drawNode(const int current);
     std::shared_ptr<Graph> _graph;
     Node& _start;
     Node& _goal;
     PriorityQueue<int, double> frontier;
 	float _movement_cost = 1;
+    cv::Mat& _map_image;
+    std::set<int> _visited_1d;
+
 };

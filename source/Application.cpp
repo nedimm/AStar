@@ -6,9 +6,9 @@ void Application::start()
 {
 	_readParameters();
     _loadMap();
-    _createGrid();
+    //_createGrid();
     _createGraph();
-    _runAStar();
+    //_runAStar();
     _showMainWindow();
 }
 
@@ -28,20 +28,29 @@ void Application::_loadMap()
 void Application::_showMainWindow()
 {
     namedWindow("A* Visualization", cv::WINDOW_AUTOSIZE);
-    _showGrid();
+    //_showGrid();
     _showGraph();
     _showMap();
+    _runAStar();
     cv::waitKey(0);
 }
 
 void Application::_showMap()
 {
     cv::imshow("A* Visualization", _map->getCanvas());
+    cv::waitKey(1);
 }
 
 void Application::_runAStar()
 {
-    AStar astar(_graph, _graph->getRandomNode(), _graph->getRandomNode());
+    auto start = _graph->getRandomNode();
+    auto goal = _graph->getRandomNode();
+    cv::circle(_map->getCanvas(), cv::Point(start.x_pos, start.y_pos), 5, cv::Scalar(0, 255, 0), 3);
+    cv::circle(_map->getCanvas(), cv::Point(goal.x_pos, goal.y_pos), 5, cv::Scalar(0, 255, 0), 3);
+    cv::imshow("A* Visualization", _map->getCanvas());
+    cv::waitKey(1);
+    
+    AStar astar(_graph, start, goal, _map->getCanvas());
     astar.search();
 }
 

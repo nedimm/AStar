@@ -6,6 +6,7 @@ _map_image(map_image)
 , _width(map_image.cols)
 , _height(map_image.rows)
 {
+    std::srand(std::time(0));
 }
 
 int Graph::getMaxWidth() {
@@ -18,6 +19,14 @@ int Graph::getMaxHeight() {
 
 int Graph::getCellSize() {
 	return _cell_size;
+}
+
+Node& Graph::getRandomNode()
+{
+    int r = std::rand() % _nodes.size() + 1;
+    auto it = _nodes.begin();
+    std::advance(it, r);
+    return *it;
 }
 
 void Graph::createGraph()
@@ -122,9 +131,11 @@ void Graph::drawGraph(cv::Mat& image_to_draw_on)
 void Graph::_drawNodeText(cv::Mat& image_to_draw_on, std::vector<Node>::value_type node)
 {
     if (!_draw_node_text)return;
-    cv::String text = cv::String( "(" +std::to_string(node.x_index) + "," + std::to_string(node.y_index) + "," + std::to_string(node.index_1d) + ")");
+    //cv::String text = cv::String( "(" +std::to_string(node.x_index) + "," + std::to_string(node.y_index) + "," + std::to_string(node.index_1d) + ")");
+    cv::String text = cv::String(std::to_string(node.index_1d));
+
     putText(image_to_draw_on, text, cv::Point(node.x_pos+1, node.y_pos +1),
-            cv::FONT_HERSHEY_COMPLEX_SMALL, 0.8, cv::Scalar(200, 200, 250), 1);
+            cv::FONT_HERSHEY_PLAIN, 0.8, cv::Scalar(0, 0, 0), 1);
 }
 
 void Graph::_drawNodes(cv::Mat& image_to_draw_on)

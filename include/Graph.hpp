@@ -24,11 +24,10 @@ public:
     Graph(cv::Mat& map_image, int cell_size);
     void createGraph();
     void drawGraph(cv::Mat& image_to_draw_on);
-    void _drawNodeText(cv::Mat& image_to_draw_on, std::vector<Node>::value_type node);
 	int getMaxWidth();
 	int getMaxHeight();
 	int getCellSize();
-    Node& getRandomNode() { return _nodes[0]; }
+    Node& getRandomNode();
     Node& getNodeFromIndex_1d(int index_1d);
 
 protected:
@@ -38,6 +37,7 @@ protected:
     void _addBottomNeighbor(const Node& node);
     void _createEdges();
     void _drawNodes(cv::Mat& image_to_draw_on);
+    void _drawNodeText(cv::Mat& image_to_draw_on, std::vector<Node>::value_type node);
     void _drawEdges(cv::Mat& image_to_draw_on);
 
     std::vector<Node> _nodes;
