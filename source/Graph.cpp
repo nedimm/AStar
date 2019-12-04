@@ -79,11 +79,6 @@ void Graph::_addLeftNeighbor(const Node& node)
             _nodes[node.index_1d].neighbors_1d.push_back(index_left);
             _nodes[index_left].neighbors_1d.push_back(node.index_1d);
         }
-        /*if (_nodeIsDriveable(node.y_pos, node.x_pos - _cell_size))
-        {
-            int index_left = _node_index_matrix[node.y_index][node.x_index-1];
-            _nodes[node.index_1d].neighbors_1d.push_back(index_left);
-        }*/
     }
 }
 
@@ -103,11 +98,6 @@ void Graph::_addBottomNeighbor(const Node& node)
             _nodes[node.index_1d].neighbors_1d.push_back(index_bottom);
             _nodes[index_bottom].neighbors_1d.push_back(node.index_1d);
         }
-        /*if (_nodeIsDriveable(node.y_pos + _cell_size, node.x_pos))
-        {
-            int index_bottom = _node_index_matrix[node.y_index+1][node.x_index];
-            _nodes[node.index_1d].neighbors_1d.push_back(index_bottom);
-        }*/
     }
 }
 
@@ -122,39 +112,39 @@ void Graph::_createEdges()
 
 
 
-void Graph::drawGraph(cv::Mat& image_to_draw_on)
+void Graph::drawGraph(cv::Mat& canvas)
 {
-    _drawNodes(image_to_draw_on);
-    _drawEdges(image_to_draw_on);
+    _drawNodes(canvas);
+    _drawEdges(canvas);
 }
 
-void Graph::_drawNodeText(cv::Mat& image_to_draw_on, std::vector<Node>::value_type node)
+void Graph::_drawNodeText(cv::Mat& canvas, std::vector<Node>::value_type node)
 {
     if (!_draw_node_text)return;
     //cv::String text = cv::String( "(" +std::to_string(node.x_index) + "," + std::to_string(node.y_index) + "," + std::to_string(node.index_1d) + ")");
     cv::String text = cv::String(std::to_string(node.index_1d));
 
-    putText(image_to_draw_on, text, cv::Point(node.x_pos+1, node.y_pos +1),
+    putText(canvas, text, cv::Point(node.x_pos+1, node.y_pos +1),
             cv::FONT_HERSHEY_PLAIN, 0.8, cv::Scalar(0, 0, 0), 1);
 }
 
-void Graph::_drawNodes(cv::Mat& image_to_draw_on)
+void Graph::_drawNodes(cv::Mat& canvas)
 {
     for (auto node : _nodes)
     {
-        cv::circle(image_to_draw_on, cv::Point(node.x_pos, node.y_pos), _node_radius, _node_color, _thickness);
-        _drawNodeText(image_to_draw_on, node);
+        cv::circle(canvas, cv::Point(node.x_pos, node.y_pos), _node_radius, _node_color, _thickness);
+        _drawNodeText(canvas, node);
     }
 }
 
-void Graph::_drawEdges(cv::Mat& image_to_draw_on)
+void Graph::_drawEdges(cv::Mat& canvas)
 {
     for (auto node : _nodes)
     {
         for (auto neighbor_1D : node.neighbors_1d)
         {
             Node& neighbor = _nodes[neighbor_1D];
-            cv::line(image_to_draw_on, cv::Point(node.x_pos, node.y_pos), cv::Point(neighbor.x_pos, neighbor.y_pos), _edge_color, _thickness);
+            cv::line(canvas, cv::Point(node.x_pos, node.y_pos), cv::Point(neighbor.x_pos, neighbor.y_pos), _edge_color, _thickness);
         }
     }
 }

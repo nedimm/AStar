@@ -22,7 +22,8 @@ set(SOURCE_FILES
 	include/CustomDataTypes.hpp
 	include/AStar.hpp
 	source/AStar.cpp
-	source/implementation.cpp
+	include/Path.hpp
+	source/Path.cpp
 	source/Main.cpp
 )
 

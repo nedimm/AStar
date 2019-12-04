@@ -6,9 +6,8 @@ void Application::start()
 {
 	_readParameters();
     _loadMap();
-    //_createGrid();
+    _createGrid();
     _createGraph();
-    //_runAStar();
     _showMainWindow();
 }
 
@@ -28,10 +27,11 @@ void Application::_loadMap()
 void Application::_showMainWindow()
 {
     namedWindow("A* Visualization", cv::WINDOW_AUTOSIZE);
-    //_showGrid();
+    _showGrid();
     _showGraph();
     _showMap();
     _runAStar();
+	_showPath();
     cv::waitKey(0);
 }
 
@@ -45,23 +45,24 @@ void Application::_runAStar()
 {
     auto start = _graph->getRandomNode();
     auto goal = _graph->getRandomNode();
-    cv::circle(_map->getCanvas(), cv::Point(start.x_pos, start.y_pos), 5, cv::Scalar(0, 255, 0), 3);
-    cv::circle(_map->getCanvas(), cv::Point(goal.x_pos, goal.y_pos), 5, cv::Scalar(0, 255, 0), 3);
-    cv::imshow("A* Visualization", _map->getCanvas());
-    cv::waitKey(1);
     
     AStar astar(_graph, start, goal, _map->getCanvas());
-    astar.search();
+    auto path = astar.searchPath();
+	_path = std::make_shared<Path>(_map->getCanvas(), path, _graph);
 }
 
 void Application::_createGrid()
 {
-    _grid = std::make_shared<Grid>(_map->getWidth(), _map->getHeight(), _grid_cell_size);
+	if (_gridShouldBeShown == true) {
+		_grid = std::make_shared<Grid>(_map->getWidth(), _map->getHeight(), _grid_cell_size);
+	}
 }
 
 void Application::_showGrid()
 {
-    _grid->drawGrid(_map->getCanvas());
+	if (_gridShouldBeShown == true) {
+		_grid->drawGrid(_map->getCanvas());
+	}
 }
 
 void Application::_createGraph()
@@ -73,4 +74,8 @@ void Application::_createGraph()
 void Application::_showGraph()
 {
     _graph->drawGraph(_map->getCanvas());
+}
+
+void Application::_showPath() {
+	_path->drawPath();
 }

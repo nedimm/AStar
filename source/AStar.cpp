@@ -1,18 +1,20 @@
 #include "../include/AStar.hpp"
 
-AStar::AStar(std::shared_ptr<Graph> graph, Node& start, Node& end, cv::Mat& map_image) :
+AStar::AStar(std::shared_ptr<Graph> graph, Node& start, Node& end, cv::Mat& canvas) :
     _graph(graph),
     _start(start),
     _goal(end),
-    _map_image(map_image)
+    _canvas(canvas)
 {
+	_drawNode(_start.index_1d, _start_goal_node_radius, _start_node_color, _start_goal_node_thickness);
+	_drawNode(_goal.index_1d, _start_goal_node_radius, _goal_node_color, _start_goal_node_thickness);
 }
 
-void AStar::_drawNode(const int current)
+void AStar::_drawNode(const int current, int radius, cv::Scalar color, int thickness)
 {
     auto node = _graph->getNodeFromIndex_1d(current);
-    cv::circle(_map_image, cv::Point(node.x_pos, node.y_pos), 3, cv::Scalar(0, 165, 255), 2);
-    cv::imshow("A* Visualization", _map_image);
+    cv::circle(_canvas, cv::Point(node.x_pos, node.y_pos), radius, color, thickness);
+    cv::imshow("A* Visualization", _canvas);
     cv::waitKey(1);
 }
 
@@ -24,7 +26,7 @@ float AStar::heuristic(Node& from_node) const
 }
 
 
-void AStar::search()
+std::vector<int> AStar::searchPath()
 {
     frontier.put(_start.index_1d, 0);
     _start.came_from_1d = _start.index_1d;
@@ -33,7 +35,7 @@ void AStar::search()
     while (!frontier.empty()) {
         const int current = frontier.get();
         _visited_1d.insert(current);
-        _drawNode(current);
+        _drawNode(current, _exploration_node_radius, _exploration_node_color, _exploration_node_thickness);
         if (current == _goal.index_1d) {
             break;
         }
@@ -41,7 +43,7 @@ void AStar::search()
         for (auto node_1d : current_node.neighbors_1d) {
             if (_visited_1d.count(node_1d) > 0)continue;
             auto next_node = _graph->getNodeFromIndex_1d(node_1d);
-            _drawNode(node_1d);
+            _drawNode(node_1d, _exploration_node_radius, _exploration_node_color, _exploration_node_thickness);
 
             const float new_cost = current_node.cost_so_far + _movement_cost;
             if (next_node.cost_so_far == _goal.cost_so_far
@@ -52,5 +54,19 @@ void AStar::search()
                 next_node.came_from_1d = current;
             }
         }
+		
     }
+	return _backpropagate();
+}
+
+std::vector<int> AStar::_backpropagate()
+{
+	std::vector<int> path;
+	int current = _goal.index_1d;
+	while (current != _start.index_1d) {
+		path.push_back(current);
+		auto current_node = _graph->getNodeFromIndex_1d(current);
+		current = current_node.came_from_1d;
+	}
+	return path;
 }

@@ -1,27 +1,12 @@
 #pragma once
+#include "Node.hpp"
 #include <opencv2/opencv.hpp>
 #include <vector>
-
-struct Node
-{
-	//bool operator == (const Node& o) { return x_index == o.x_index && y_index == o.y_index; }
-	//bool operator < (const Node& o) { return distance + cost_so_far < o.distance + o.cost_so_far; }
-    float x_pos;
-    float y_pos;
-    int x_index;
-    int y_index;
-    int index_1d;
-    std::vector<int> neighbors_1d;
-	int parent_index_1d;
-	int came_from_1d;
-	float estimated_distance; //h(n)
-	float cost_so_far; //g(n)
-};
 
 class Graph
 {
 public:
-    Graph(cv::Mat& map_image, int cell_size);
+    Graph(cv::Mat& canvas, int cell_size);
     void createGraph();
     void drawGraph(cv::Mat& image_to_draw_on);
 	int getMaxWidth();
@@ -52,5 +37,5 @@ protected:
     cv::Scalar _edge_color = cv::Scalar(255, 0, 0);
     int _node_radius = 2;
     int _thickness = 1;
-    bool _draw_node_text = false;
+    bool _draw_node_text = true;
 };

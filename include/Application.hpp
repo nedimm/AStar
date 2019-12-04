@@ -4,6 +4,7 @@
 #include "Grid.hpp"
 #include "Graph.hpp"
 #include "ParameterServer.hpp"
+#include "Path.hpp"
 
 class Application
 {
@@ -21,7 +22,7 @@ protected:
     void _loadMap();
     void _showMap();
     void _runAStar();
-
+	void _showPath();
 
 	// think about parametrization of this:
     int _grid_cell_size = 10;
@@ -32,7 +33,9 @@ protected:
     std::shared_ptr <Map> _map;
     std::shared_ptr <Grid> _grid;
     std::shared_ptr<Graph> _graph;
+	std::shared_ptr<Path> _path;
 	ParameterServer _parameter_server;
+	bool _gridShouldBeShown = false;
 };
 
 
