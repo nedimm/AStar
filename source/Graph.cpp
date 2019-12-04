@@ -21,12 +21,10 @@ int Graph::getCellSize() {
 	return _cell_size;
 }
 
-Node& Graph::getRandomNode()
+Node* Graph::getRandomNode()
 {
-    int r = std::rand() % _nodes.size() + 1;
-    auto it = _nodes.begin();
-    std::advance(it, r);
-    return *it;
+    int r = std::rand() % _nodes.size();
+    return &_nodes[r];
 }
 
 void Graph::createGraph()
@@ -59,7 +57,6 @@ void Graph::_createNodes()
             }
         }
         _node_index_matrix.push_back(node_index_row);
-
     }
 }
 
@@ -149,9 +146,9 @@ void Graph::_drawEdges(cv::Mat& canvas)
     }
 }
 
-Node& Graph::getNodeFromIndex_1d(int index_1d)
+Node* Graph::getNodeFromIndex_1d(int index_1d)
 {
-    return _nodes[index_1d];
+    return &_nodes[index_1d];
 }
 
 bool Graph::_nodeIsDriveable(int row, int column)

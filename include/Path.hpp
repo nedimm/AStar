@@ -17,6 +17,6 @@ protected:
 	std::shared_ptr<Graph> _graph;
 	std::vector<int> _path;
 	cv::Scalar _path_color = cv::Scalar(0, 0, 255);
-	int _thickness = 3;
+	int _thickness = 2;
 
 };

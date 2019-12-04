@@ -12,8 +12,8 @@ public:
 	int getMaxWidth();
 	int getMaxHeight();
 	int getCellSize();
-    Node& getRandomNode();
-    Node& getNodeFromIndex_1d(int index_1d);
+    Node* getRandomNode();
+    Node* getNodeFromIndex_1d(int index_1d);
 
 protected:
     bool _nodeIsDriveable(int i, int j);
@@ -37,5 +37,5 @@ protected:
     cv::Scalar _edge_color = cv::Scalar(255, 0, 0);
     int _node_radius = 2;
     int _thickness = 1;
-    bool _draw_node_text = true;
+    bool _draw_node_text = false;
 };
