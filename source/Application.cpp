@@ -8,6 +8,7 @@ void Application::start()
     _loadMap();
     _createGrid();
     _createGraph();
+    _runAStar();
     _showMainWindow();
 }
 
@@ -30,8 +31,8 @@ void Application::_showMainWindow()
     _showGrid();
     _showGraph();
     _showMap();
-    _runAStar();
 	_showPath();
+    _showSmoothPath();
     cv::waitKey(0);
 }
 
@@ -78,4 +79,10 @@ void Application::_showGraph()
 
 void Application::_showPath() {
 	_path->drawPath();
+}
+
+void Application::_showSmoothPath()
+{
+    _path->createSmoothPath();
+    _path->drawSmoothPath();
 }

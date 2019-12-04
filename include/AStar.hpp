@@ -32,6 +32,10 @@ public:
 
 protected:
     void _drawNode(const int current, int radius, cv::Scalar color, int thickness);
+    void _drawStartNode();
+    void _drawExplorationNode(const int current);
+
+
 
 	std::vector<int> _backpropagate();
 	std::shared_ptr<Graph> _graph;
@@ -49,6 +53,10 @@ protected:
 	int _start_goal_node_thickness = 3;
 	int _exploration_node_radius = 3;
 	int _exploration_node_thickness = 2;
+
+    bool _should_draw_start_node = true;
+    bool _should_draw_exploration_node = true;
+
 
 
 

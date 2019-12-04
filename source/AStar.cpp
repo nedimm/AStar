@@ -6,16 +6,30 @@ AStar::AStar(std::shared_ptr<Graph> graph, Node* start, Node* end, cv::Mat& canv
     _goal(end),
     _canvas(canvas)
 {
-	_drawNode(_start->index_1d, _start_goal_node_radius, _start_node_color, _start_goal_node_thickness);
-	_drawNode(_goal->index_1d, _start_goal_node_radius, _goal_node_color, _start_goal_node_thickness);
+    _drawStartNode();
 }
 
 void AStar::_drawNode(const int current, int radius, cv::Scalar color, int thickness)
 {
-    auto node = _graph->getNodeFromIndex_1d(current);
-    cv::circle(_canvas, cv::Point(node->x_pos, node->y_pos), radius, color, thickness);
-    cv::imshow("A* Visualization", _canvas);
-    cv::waitKey(1);
+        auto node = _graph->getNodeFromIndex_1d(current);
+        cv::circle(_canvas, cv::Point(node->x_pos, node->y_pos), radius, color, thickness);
+        cv::imshow("A* Visualization", _canvas);
+        cv::waitKey(1);
+}
+
+void AStar::_drawStartNode()
+{
+    if (_should_draw_start_node == true) {
+        _drawNode(_start->index_1d, _start_goal_node_radius, _start_node_color, _start_goal_node_thickness);
+        _drawNode(_goal->index_1d, _start_goal_node_radius, _goal_node_color, _start_goal_node_thickness);
+    }
+}
+
+void AStar::_drawExplorationNode(const int current)
+{
+    if (_should_draw_exploration_node == true) {
+        _drawNode(current, _exploration_node_radius, _exploration_node_color, _exploration_node_thickness);
+    }
 }
 
 float AStar::heuristic(Node* from_node) const
@@ -35,7 +49,7 @@ std::vector<int> AStar::searchPath()
     while (!frontier.empty()) {
         const int current = frontier.get();
         _visited_1d.insert(current);
-        _drawNode(current, _exploration_node_radius, _exploration_node_color, _exploration_node_thickness);
+        _drawExplorationNode(current);
         if (current == _goal->index_1d) {
             break;
         }
@@ -43,7 +57,7 @@ std::vector<int> AStar::searchPath()
         for (auto node_1d : current_node->neighbors_1d) {
             if (_visited_1d.count(node_1d) > 0)continue;
             auto next_node = _graph->getNodeFromIndex_1d(node_1d);
-            _drawNode(node_1d, _exploration_node_radius, _exploration_node_color, _exploration_node_thickness);
+            _drawExplorationNode(node_1d);
 
             const float new_cost = current_node->cost_so_far + _movement_cost;
             if (next_node->cost_so_far == _goal->cost_so_far

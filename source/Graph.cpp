@@ -107,12 +107,12 @@ void Graph::_createEdges()
     }
 }
 
-
-
 void Graph::drawGraph(cv::Mat& canvas)
 {
-    _drawNodes(canvas);
-    _drawEdges(canvas);
+    if (_graph_should_be_shown == true) {
+        _drawNodes(canvas);
+        _drawEdges(canvas);
+    }
 }
 
 void Graph::_drawNodeText(cv::Mat& canvas, std::vector<Node>::value_type node)

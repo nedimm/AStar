@@ -23,6 +23,8 @@ protected:
     void _showMap();
     void _runAStar();
 	void _showPath();
+    void _showSmoothPath();
+
 
 	// think about parametrization of this:
     int _grid_cell_size = 10;

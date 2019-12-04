@@ -37,5 +37,7 @@ protected:
     cv::Scalar _edge_color = cv::Scalar(255, 0, 0);
     int _node_radius = 2;
     int _thickness = 1;
+
     bool _draw_node_text = false;
+    bool _graph_should_be_shown = true;
 };
