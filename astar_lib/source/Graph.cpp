@@ -98,6 +98,27 @@ void Graph::_addBottomNeighbor(const Node& node)
     }
 }
 
+void Graph::_setNodeMovementCosts(std::shared_ptr<Node> node)
+{
+    // set left obstacle distance
+    if (!_hasLeftNeighbor(_nodes[node->index_1d]))
+    {
+        float distance = 0.f;
+        for (int i = 1; i < _cell_size; ++i)
+        {
+            distance += 1.f;
+            if (!_nodeIsDriveable(node->y_pos, node->x_pos - i))
+            {
+                node->movement_cost = _base_movement_cost + _obstacle_factor * (distance/_cell_size);
+                break;
+            }
+        }
+    }
+    // set right obstacle distance
+    // set top obstacle distance
+    // set bottom obstacle distance
+}
+
 void Graph::_createEdges()
 {
     for (auto node : _nodes)
@@ -105,6 +126,54 @@ void Graph::_createEdges()
         _addLeftNeighbor(node);
         _addBottomNeighbor(node);
     }
+}
+
+bool Graph::_hasLeftNeighbor(const Node& node)
+{
+    if (node.x_index == 0)return false;
+    for (auto neighbor_1D : node.neighbors_1d)
+    {
+        auto x_index = _nodes[neighbor_1D].x_index;
+        auto y_index = _nodes[neighbor_1D].y_index;
+        if (y_index == node.y_index && x_index == node.x_index - 1) return true;
+    }
+    return false;
+}
+
+bool Graph::_hasRightNeighbor(const Node& node)
+{
+    if (node.x_index == _width - 1)return false;
+    for (auto neighbor_1D : node.neighbors_1d)
+    {
+        auto x_index = _nodes[neighbor_1D].x_index;
+        auto y_index = _nodes[neighbor_1D].y_index;
+        if (y_index == node.y_index && x_index == node.x_index + 1) return true;
+    }
+    return false;
+}
+
+bool Graph::_hasTopNeighbor(const Node& node)
+{
+    if (node.y_index == 0)return false;
+    for (auto neighbor_1D : node.neighbors_1d)
+    {
+        auto x_index = _nodes[neighbor_1D].x_index;
+        auto y_index = _nodes[neighbor_1D].y_index;
+        if (y_index == node.y_index - 1 && x_index == node.x_index) return true;
+    }
+    return false;
+}
+
+bool Graph::_hasBottomNeighbor(const Node& node)
+{
+    if (node.y_index == _height - 1)return false;
+    for (auto neighbor_1D : node.neighbors_1d)
+    {
+        auto x_index = _nodes[neighbor_1D].x_index;
+        auto y_index = _nodes[neighbor_1D].y_index;
+        if (y_index == node.y_index + 1 && x_index == node.x_index) return true;
+    }
+    return false;
 }
 
 void Graph::drawGraph(cv::Mat& canvas)
