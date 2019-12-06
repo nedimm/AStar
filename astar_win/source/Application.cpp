@@ -9,6 +9,8 @@ void Application::start()
     _createGrid();
     _createGraph();
     _showMainWindow();
+    _exportSmoothPath();
+    cv::waitKey(0);
 }
 
 void Application::_readParameters() {
@@ -33,7 +35,6 @@ void Application::_showMainWindow()
     _runAStar();
     _showPath();
     _showSmoothPath();
-    cv::waitKey(0);
 }
 
 void Application::_showMap()
@@ -85,4 +86,9 @@ void Application::_showSmoothPath()
 {
     _path->createSmoothPath();
     _path->drawSmoothPath();
+}
+
+void Application::_exportSmoothPath()
+{
+    _path->writeToFile();
 }

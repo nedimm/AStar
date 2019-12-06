@@ -13,6 +13,7 @@ public:
 	void drawPath();
     void createSmoothPath();
     void drawSmoothPath();
+    void writeToFile();
 
 
 protected:

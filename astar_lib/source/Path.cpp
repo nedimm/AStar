@@ -1,4 +1,5 @@
 #include "../include/Path.hpp"
+#include <fstream>
 
 void Path::drawPath() {
     if (_should_draw_path == false) return;
@@ -51,5 +52,21 @@ void Path::drawSmoothPath()
         cv::line(_canvas, start, end, _smooth_path_color, _thickness);
     }
     cv::imshow("A* Visualization", _canvas);
-    cv::waitKey(0);
+    cv::waitKey(1);
+}
+
+void Path::writeToFile()
+{
+    std::ofstream output_file("astar_path.txt");
+    if (output_file.is_open())
+    {
+        output_file << "[";
+        for (auto point : _smooth_path)
+        {
+            output_file << "[" << point[0] << "," << point[1] << "]\n";
+        }
+        output_file.close();
+        output_file << "]";
+    }
+    else std::cout << "Unable to open file";
 }

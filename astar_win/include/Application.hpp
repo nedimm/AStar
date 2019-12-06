@@ -24,6 +24,8 @@ protected:
     void _runAStar();
 	void _showPath();
     void _showSmoothPath();
+    void _exportSmoothPath();
+
 
 
 	// think about parametrization of this:
