@@ -13,4 +13,5 @@ struct Node
 	int came_from_1d;
 	float estimated_distance; //h(n)
 	float cost_so_far; //g(n)
+    float movement_cost;
 };
