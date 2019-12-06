@@ -20,7 +20,13 @@ protected:
     void _createNodes();
     void _addLeftNeighbor(const Node& node);
     void _addBottomNeighbor(const Node& node);
+    void _setNodeMovementCosts(std::shared_ptr<Node> node);
     void _createEdges();
+    bool _hasLeftNeighbor(const Node& node);
+    bool _hasRightNeighbor(const Node& node);
+    bool _hasTopNeighbor(const Node& node);
+    bool _hasBottomNeighbor(const Node& node);
+
     void _drawNodes(cv::Mat& image_to_draw_on);
     void _drawNodeText(cv::Mat& image_to_draw_on, std::vector<Node>::value_type node);
     void _drawEdges(cv::Mat& image_to_draw_on);
@@ -38,6 +44,8 @@ protected:
     int _node_radius = 2;
     int _thickness = 1;
 
+    float _base_movement_cost = 1.f;
+    float _obstacle_factor = 1.f;
     bool _draw_node_text = false;
     bool _graph_should_be_shown = true;
 };
