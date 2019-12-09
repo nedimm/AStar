@@ -60,7 +60,7 @@ std::vector<int> AStar::searchPath()
             auto next_node = _graph->getNodeFromIndex_1d(node_1d);
             _drawExplorationNode(node_1d);
 
-            const float new_cost = current_node->cost_so_far + _movement_cost;
+            const float new_cost = current_node->cost_so_far + current_node->movement_cost;
             if (next_node->cost_so_far == _goal->cost_so_far
                 || new_cost < next_node->cost_so_far) {
                 next_node->cost_so_far = new_cost;

@@ -59,9 +59,9 @@ void Graph::_createNodes()
         _node_index_matrix.push_back(node_index_row);
     }
 
-	for each (Node node in _nodes)
-	{
-		_setNodeMovementCosts(std::make_shared<Node>(node));
+    for (int i = 0; i < _nodes.size(); ++i)
+    {
+		_setNodeMovementCosts(i);
 	}
 }
 
@@ -103,10 +103,11 @@ void Graph::_addBottomNeighbor(const Node& node)
     }
 }
 
-void Graph::_setNodeMovementCosts(std::shared_ptr<Node> node)
+void Graph::_setNodeMovementCosts(int index_1d)
 {
+    Node* node = &_nodes[index_1d];
     // set left obstacle distance
-    if (!_hasLeftNeighbor(_nodes[node->index_1d]))
+    if (!_hasLeftNeighbor(_nodes[index_1d]))
     {
         float distance = 0.f;
         for (int i = 1; i < _cell_size; ++i)
@@ -114,14 +115,53 @@ void Graph::_setNodeMovementCosts(std::shared_ptr<Node> node)
             distance += 1.f;
             if (!_nodeIsDriveable(node->y_pos, node->x_pos - i))
             {
-                node->movement_cost = _base_movement_cost + _obstacle_factor * (distance/_cell_size);
+                node->movement_cost = _base_movement_cost + _obstacle_factor * ((_cell_size-distance)/_cell_size);
                 break;
             }
         }
     }
     // set right obstacle distance
+    if (!_hasRightNeighbor(_nodes[index_1d]))
+    {
+        float distance = 0.f;
+        for (int i = 1; i < _cell_size; ++i)
+        {
+            distance += 1.f;
+            if (!_nodeIsDriveable(node->y_pos, node->x_pos + i))
+            {
+                node->movement_cost = std::max(node->movement_cost, _base_movement_cost + _obstacle_factor * ((_cell_size - distance) / _cell_size));
+                break;
+            }
+        }
+    }
     // set top obstacle distance
+    if (!_hasTopNeighbor(_nodes[index_1d]))
+    {
+        float distance = 0.f;
+        for (int i = 1; i < _cell_size; ++i)
+        {
+            distance += 1.f;
+            if (!_nodeIsDriveable(node->y_pos - i, node->x_pos))
+            {
+                node->movement_cost = std::max(node->movement_cost, _base_movement_cost + _obstacle_factor * ((_cell_size - distance) / _cell_size));
+                break;
+            }
+        }
+    }
     // set bottom obstacle distance
+    if (!_hasBottomNeighbor(_nodes[index_1d]))
+    {
+        float distance = 0.f;
+        for (int i = 1; i < _cell_size; ++i)
+        {
+            distance += 1.f;
+            if (!_nodeIsDriveable(node->y_pos + i, node->x_pos))
+            {
+                node->movement_cost = std::max(node->movement_cost, _base_movement_cost + _obstacle_factor * ((_cell_size - distance) / _cell_size));
+                break;
+            }
+        }
+    }
 }
 
 void Graph::_createEdges()
@@ -210,7 +250,7 @@ cv::Scalar Graph::_getNodeColor(Node& node) {
 void Graph::drawNodeCosts(cv::Mat& canvas) {
 	for (auto node : _nodes)
 	{
-		cv::circle(canvas, cv::Point(node.x_pos, node.y_pos), _node_radius, _getNodeColor(node), _thickness);
+		cv::circle(canvas, cv::Point(node.x_pos, node.y_pos), _node_radius+3, _getNodeColor(node), _thickness+2);
 		_drawNodeText(canvas, node);
 	}
 }

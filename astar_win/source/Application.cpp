@@ -32,9 +32,9 @@ void Application::_showMainWindow()
     _showGrid();
     _showGraph();
     _showMap();
+    _showNodeCosts();
     _runAStar();
 	_showPath();
-	_showNodeCosts();
     _showSmoothPath();
 	
 }
@@ -49,6 +49,8 @@ void Application::_runAStar()
 {
     auto start = _graph->getRandomNode();
     auto goal = _graph->getRandomNode();
+    //auto start = _graph->getNodeFromIndex_1d(120);
+    //auto goal = _graph->getNodeFromIndex_1d(204);
     
     AStar astar(_graph, start, goal, _map->getCanvas());
     auto path = astar.searchPath();

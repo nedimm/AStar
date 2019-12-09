@@ -23,7 +23,7 @@ protected:
     void _createNodes();
     void _addLeftNeighbor(const Node& node);
     void _addBottomNeighbor(const Node& node);
-    void _setNodeMovementCosts(std::shared_ptr<Node> node);
+    void _setNodeMovementCosts(int index_1d);
     void _createEdges();
     bool _hasLeftNeighbor(const Node& node);
     bool _hasRightNeighbor(const Node& node);
