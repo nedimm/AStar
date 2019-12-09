@@ -4,7 +4,8 @@ AStar::AStar(std::shared_ptr<Graph> graph, Node* start, Node* end, cv::Mat& canv
     _graph(graph),
     _start(start),
     _goal(end),
-    _canvas(canvas)
+    _canvas(canvas),
+	_movement_cost(graph->base_cost)
 {
     _drawStartNode();
 }

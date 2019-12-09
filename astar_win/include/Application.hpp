@@ -25,6 +25,8 @@ protected:
 	void _showPath();
     void _showSmoothPath();
     void _exportSmoothPath();
+	void _showNodeCosts();
+
 
 
 

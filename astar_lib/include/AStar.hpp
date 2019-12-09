@@ -42,7 +42,7 @@ protected:
     Node* _start;
     Node* _goal;
     PriorityQueue<int, double> frontier;
-	float _movement_cost = 1;
+	float _movement_cost;
     cv::Mat& _canvas;
     std::set<int> _visited_1d;
 	cv::Scalar _exploration_node_color = cv::Scalar(0, 165, 255);

@@ -58,6 +58,11 @@ void Graph::_createNodes()
         }
         _node_index_matrix.push_back(node_index_row);
     }
+
+	for each (Node node in _nodes)
+	{
+		_setNodeMovementCosts(std::make_shared<Node>(node));
+	}
 }
 
 void Graph::_addLeftNeighbor(const Node& node)
@@ -194,11 +199,28 @@ void Graph::_drawNodeText(cv::Mat& canvas, std::vector<Node>::value_type node)
             cv::FONT_HERSHEY_PLAIN, 0.8, cv::Scalar(0, 0, 0), 1);
 }
 
+cv::Scalar Graph::_getNodeColor(Node& node) {
+	double blue = 0.0;
+	double penalty = node.movement_cost - base_cost;
+	double green = 255 - (255 * penalty);
+	double red = 0 + (255 * penalty);
+	return cv::Scalar(blue, green, red);
+}
+
+void Graph::drawNodeCosts(cv::Mat& canvas) {
+	for (auto node : _nodes)
+	{
+		cv::circle(canvas, cv::Point(node.x_pos, node.y_pos), _node_radius, _getNodeColor(node), _thickness);
+		_drawNodeText(canvas, node);
+	}
+}
+
+
 void Graph::_drawNodes(cv::Mat& canvas)
 {
     for (auto node : _nodes)
     {
-        cv::circle(canvas, cv::Point(node.x_pos, node.y_pos), _node_radius, _node_color, _thickness);
+        cv::circle(canvas, cv::Point(node.x_pos, node.y_pos), _node_radius, _default_node_color, _thickness);
         _drawNodeText(canvas, node);
     }
 }

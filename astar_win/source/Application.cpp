@@ -33,8 +33,10 @@ void Application::_showMainWindow()
     _showGraph();
     _showMap();
     _runAStar();
-    _showPath();
+	_showPath();
+	_showNodeCosts();
     _showSmoothPath();
+	
 }
 
 void Application::_showMap()
@@ -76,6 +78,11 @@ void Application::_createGraph()
 void Application::_showGraph()
 {
     _graph->drawGraph(_map->getCanvas());
+}
+
+void Application::_showNodeCosts()
+{
+	_graph->drawNodeCosts(_map->getCanvas());
 }
 
 void Application::_showPath() {
