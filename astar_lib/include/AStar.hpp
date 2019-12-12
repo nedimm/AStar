@@ -25,7 +25,7 @@ struct PriorityQueue {
 
 class AStar {
 public:
-	AStar(std::shared_ptr<Graph> graph, Node* start, Node* end, cv::Mat& canvas);
+	AStar(std::shared_ptr<Graph> graph, Node* start, Node* end, cv::Mat& canvas, bool should_visualize);
 	std::vector<int> searchPath();
 	
 	float heuristic(Node* from_node) const;
@@ -34,15 +34,12 @@ protected:
     void _drawNode(const int current, int radius, cv::Scalar color, int thickness);
     void _drawStartNode();
     void _drawExplorationNode(const int current);
-
-
-
-	std::vector<int> _backpropagate();
-	std::shared_ptr<Graph> _graph;
+    std::vector<int> _backpropagate();
+    bool _should_visualize = false;
+    std::shared_ptr<Graph> _graph;
     Node* _start;
     Node* _goal;
     PriorityQueue<int, double> frontier;
-	float _movement_cost;
     cv::Mat& _canvas;
     std::set<int> _visited_1d;
 	cv::Scalar _exploration_node_color = cv::Scalar(0, 165, 255);

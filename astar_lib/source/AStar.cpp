@@ -1,11 +1,11 @@
 #include "../include/AStar.hpp"
 
-AStar::AStar(std::shared_ptr<Graph> graph, Node* start, Node* end, cv::Mat& canvas):
+AStar::AStar(std::shared_ptr<Graph> graph, Node* start, Node* end, cv::Mat& canvas, bool should_visualize):
     _graph(graph),
     _start(start),
     _goal(end),
     _canvas(canvas),
-	_movement_cost(graph->base_cost)
+    _should_visualize(should_visualize)
 {
     _drawStartNode();
 }
@@ -20,6 +20,7 @@ void AStar::_drawNode(const int current, int radius, cv::Scalar color, int thick
 
 void AStar::_drawStartNode()
 {
+    if (_should_visualize == false)return;
     if (_should_draw_start_node == true) {
         _drawNode(_start->index_1d, _start_goal_node_radius, _start_node_color, _start_goal_node_thickness);
         _drawNode(_goal->index_1d, _start_goal_node_radius, _goal_node_color, _start_goal_node_thickness);
@@ -28,6 +29,7 @@ void AStar::_drawStartNode()
 
 void AStar::_drawExplorationNode(const int current)
 {
+    if (_should_visualize == false)return;
     if (_should_draw_exploration_node == true) {
         _drawNode(current, _exploration_node_radius, _exploration_node_color, _exploration_node_thickness);
     }
@@ -37,7 +39,7 @@ float AStar::heuristic(Node* from_node) const
 {
     const int dx = abs(from_node->x_index - _goal->x_index);
     const int dy = abs(from_node->y_index - _goal->y_index);
-    return _movement_cost * (dx + dy);
+    return from_node->movement_cost * (dx + dy);
 }
 
 

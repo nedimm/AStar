@@ -6,7 +6,7 @@
 class Graph
 {
 public:
-    Graph(cv::Mat& canvas, int cell_size);
+    Graph(cv::Mat& canvas, int cell_size, float obstacle_cost_factor);
     void createGraph();
     void drawGraph(cv::Mat& image_to_draw_on);
 	int getMaxWidth();
@@ -50,7 +50,7 @@ protected:
     int _thickness = 1;
 
     float _base_movement_cost = 1.f;
-    float _obstacle_factor = 1.f;
+    float _obstacle_cost_factor;
     bool _draw_node_text = false;
     bool _graph_should_be_shown = true;
 };

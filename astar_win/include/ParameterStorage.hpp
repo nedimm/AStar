@@ -22,11 +22,20 @@ using ParameterType = std::map<std::string, std::shared_ptr<BaseParameter> >::va
 
 inline ParameterStorage::ParameterStorage()
 {
-    _parameters.insert(ParameterType("grid_cell_size",
-        new TypedParameter<int>(10, 1, 200, MutabilityState::NOT_CHANGEABLE)));
 	_parameters.insert(ParameterType("map_file_name",
 		new TypedParameter<std::string>("testmap_883_556.png", "", "", MutabilityState::NOT_CHANGEABLE)));
-    
+    _parameters.insert(ParameterType("show_visualization",
+        new TypedParameter<int>(1, 0, 1, MutabilityState::NOT_CHANGEABLE)));
+    _parameters.insert(ParameterType("grid_cell_size",
+        new TypedParameter<int>(10, 1, 200, MutabilityState::NOT_CHANGEABLE)));
+    _parameters.insert(ParameterType("obstacle_cost_factor",
+        new TypedParameter<float>(1.0, 0, 1, MutabilityState::NOT_CHANGEABLE)));
+    _parameters.insert(ParameterType("smooth_rate_alpha",
+        new TypedParameter<float>(0.3, 0, 1, MutabilityState::NOT_CHANGEABLE)));
+    _parameters.insert(ParameterType("smooth_rate_beta",
+        new TypedParameter<float>(0.2, 0, 1, MutabilityState::NOT_CHANGEABLE)));
+    _parameters.insert(ParameterType("output_file_name",
+        new TypedParameter<std::string>("astar_path.txt", "", "", MutabilityState::NOT_CHANGEABLE)));
 }
 
 template <typename T>

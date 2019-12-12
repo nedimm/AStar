@@ -1,10 +1,11 @@
 #include "../include/Graph.hpp"
 
-Graph::Graph(cv::Mat& map_image, int cell_size):
+Graph::Graph(cv::Mat& map_image, int cell_size, float obstacle_cost_factor):
 _map_image(map_image)
 , _cell_size(cell_size)
 , _width(map_image.cols)
 , _height(map_image.rows)
+, _obstacle_cost_factor(obstacle_cost_factor)
 {
     std::srand(std::time(0));
 }
@@ -115,7 +116,7 @@ void Graph::_setNodeMovementCosts(int index_1d)
             distance += 1.f;
             if (!_nodeIsDriveable(node->y_pos, node->x_pos - i))
             {
-                node->movement_cost = _base_movement_cost + _obstacle_factor * ((_cell_size-distance)/_cell_size);
+                node->movement_cost = _base_movement_cost + _obstacle_cost_factor * ((_cell_size-distance)/_cell_size);
                 break;
             }
         }
@@ -129,7 +130,7 @@ void Graph::_setNodeMovementCosts(int index_1d)
             distance += 1.f;
             if (!_nodeIsDriveable(node->y_pos, node->x_pos + i))
             {
-                node->movement_cost = std::max(node->movement_cost, _base_movement_cost + _obstacle_factor * ((_cell_size - distance) / _cell_size));
+                node->movement_cost = std::max(node->movement_cost, _base_movement_cost + _obstacle_cost_factor * ((_cell_size - distance) / _cell_size));
                 break;
             }
         }
@@ -143,7 +144,7 @@ void Graph::_setNodeMovementCosts(int index_1d)
             distance += 1.f;
             if (!_nodeIsDriveable(node->y_pos - i, node->x_pos))
             {
-                node->movement_cost = std::max(node->movement_cost, _base_movement_cost + _obstacle_factor * ((_cell_size - distance) / _cell_size));
+                node->movement_cost = std::max(node->movement_cost, _base_movement_cost + _obstacle_cost_factor * ((_cell_size - distance) / _cell_size));
                 break;
             }
         }
@@ -157,7 +158,7 @@ void Graph::_setNodeMovementCosts(int index_1d)
             distance += 1.f;
             if (!_nodeIsDriveable(node->y_pos + i, node->x_pos))
             {
-                node->movement_cost = std::max(node->movement_cost, _base_movement_cost + _obstacle_factor * ((_cell_size - distance) / _cell_size));
+                node->movement_cost = std::max(node->movement_cost, _base_movement_cost + _obstacle_cost_factor * ((_cell_size - distance) / _cell_size));
                 break;
             }
         }

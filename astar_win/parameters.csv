@@ -1,3 +1,8 @@
 #Id,ParameterName,Type,Value
 0,map_file_name,string,"testmap_883_556.png"
-1,grid_cell_size,int,40
+1,show_visualization,int,1
+2,grid_cell_size,int,40
+3,obstacle_cost_factor,float,1.0
+4,smooth_rate_alpha,float,0.3
+5,smooth_rate_beta,float,0.2
+6,output_file_name,string,"astar_path.txt"

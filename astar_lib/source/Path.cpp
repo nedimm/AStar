@@ -57,25 +57,9 @@ void Path::drawSmoothPath()
     cv::waitKey(1);
 }
 
-//void Path::writeToFile()
-//{
-//    std::ofstream output_file("astar_path.txt");
-//    if (output_file.is_open())
-//    {
-//        output_file << "[";
-//        for (auto point : _smooth_path)
-//        {
-//            output_file << "[" << point[0] << "," << point[1] << "]\n";
-//        }
-//        output_file.close();
-//        output_file << "]";
-//    }
-//    else std::cout << "Unable to open file";
-//}
-
 void Path::writeToFile()
 {
-    std::ofstream output_file("astar_path.txt");
+    std::ofstream output_file(_output_file_name);
     if (output_file.is_open())
     {
         output_file << ":\tx\t\ty\t\tz\t\tq\n";
@@ -85,5 +69,5 @@ void Path::writeToFile()
         }
         output_file.close();
     }
-    else std::cout << "Unable to open file";
+    else std::cout << "Unable to open file <" << _output_file_name << ">\n";
 }
