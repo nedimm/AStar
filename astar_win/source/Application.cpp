@@ -78,10 +78,10 @@ void Application::_showMap()
 
 void Application::_createAStarPath()
 {
-    //auto start = _graph->getRandomNode();
-    //auto goal = _graph->getRandomNode();
-    auto start = _graph->getNodeFromIndex_1d(120);
-    auto goal = _graph->getNodeFromIndex_1d(204);
+    auto start = _graph->getRandomNode();
+    auto goal = _graph->getRandomNode();
+    //auto start = _graph->getNodeFromIndex_1d(120);
+    //auto goal = _graph->getNodeFromIndex_1d(204);
 
     AStar astar(_graph, start, goal, _map->getCanvas(), _show_visualization);
     auto path = astar.searchPath();

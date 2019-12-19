@@ -52,7 +52,7 @@ protected:
     std::shared_ptr<Graph> _graph;
 	std::shared_ptr<Path> _path;
 	ParameterServer _parameter_server;
-	bool _gridShouldBeShown = false;
+	bool _gridShouldBeShown = true;
 };
 
 
