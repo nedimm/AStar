@@ -1,0 +1,4 @@
+struct MVPParams
+{
+    bool showGrid;
+};

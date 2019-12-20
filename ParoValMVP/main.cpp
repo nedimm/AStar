@@ -5,8 +5,8 @@
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
-    ParoValMVP w;
-    w.show();
-    return a.exec();
+    QApplication qApplication(argc, argv);
+    ParoValMVP parovalMain;
+    parovalMain.show();
+    return qApplication.exec();
 }

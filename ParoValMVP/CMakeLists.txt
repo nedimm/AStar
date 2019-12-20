@@ -1,3 +1,19 @@
+set(SOURCE_FILES 
+	ParoValMVP.ui
+	ParoValMVP.h
+    ParoValMVP.cpp
+    main.cpp
+    ParoValMVP.qrc
+	AppQt.hpp
+	AppQt.cpp
+	MVPParams.hpp
+)
+
+set(RESOURCE_FILES 
+	parameters.csv
+	images/testmap_883_556.png
+)
+
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(CMAKE_AUTOMOC ON)
@@ -37,19 +53,23 @@ if(Qt5_FOUND AND WIN32 AND TARGET Qt5::qmake AND NOT TARGET Qt5::windeployqt)
     endif()
 endif()
 
-add_executable(ParoValMVP WIN32
-    ParoValMVP.ui
-    ParoValMVP.cpp
-    main.cpp
-    ParoValMVP.qrc
-)
+add_executable(ParoValMVP WIN32 ${SOURCE_FILES} ${RESOURCE_FILES})
 
 set_property(TARGET ParoValMVP ${PROJECT_NAME} PROPERTY VS_DEBUGGER_WORKING_DIRECTORY "$(ProjectDir)$(Configuration)")
 
-target_link_libraries(ParoValMVP PRIVATE Qt5::Widgets)
+target_link_libraries(ParoValMVP PRIVATE Qt5::Widgets AStar)
 add_custom_command(TARGET ParoValMVP
         POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_CURRENT_BINARY_DIR}/windeployqt"
         COMMAND set PATH=%PATH%$<SEMICOLON>${qt5_install_prefix}/bin
         COMMAND Qt5::windeployqt --dir "$(ProjectDir)$(Configuration)" "$<TARGET_FILE_DIR:ParoValMVP>/$<TARGET_FILE_NAME:ParoValMVP>"
 )
+
+foreach(item ${RESOURCE_FILES})
+	add_custom_command(
+		TARGET ParoValMVP
+		POST_BUILD
+		COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/${item} 
+		$<TARGET_FILE_DIR:ParoValMVP>
+	)
+endforeach(item)
