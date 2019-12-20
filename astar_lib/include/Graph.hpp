@@ -16,7 +16,9 @@ public:
     Node* getNodeFromIndex_1d(int index_1d);
 	void drawNodeCosts(cv::Mat& canvas);
     void setDrawNodeTextIsShown(bool isShown);
-	const float base_cost = 1.f;
+    void setDrawNodeCostTextIsShown(bool isShown);
+
+    float base_movement_cost = 1.0f;
     int getNumberOfNodes();
 
 protected:
@@ -50,8 +52,9 @@ protected:
     int _node_radius = 2;
     int _thickness = 1;
 
-    float _base_movement_cost = 1.f;
     float _obstacle_cost_factor;
     bool _node_text_should_be_shown = false;
+    bool _node_cost_text_should_be_shown = false;
+
     bool _graph_should_be_shown = true;
 };

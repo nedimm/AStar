@@ -39,7 +39,8 @@ float AStar::heuristic(Node* from_node) const
 {
     const int dx = abs(from_node->x_index - _goal->x_index);
     const int dy = abs(from_node->y_index - _goal->y_index);
-    return from_node->movement_cost * (dx + dy);
+    
+    return dx + dy;
 }
 
 
@@ -57,12 +58,12 @@ std::vector<int> AStar::searchPath()
             break;
         }
         auto current_node = _graph->getNodeFromIndex_1d(current);
-        for (auto node_1d : current_node->neighbors_1d) {
-            if (_visited_1d.count(node_1d) > 0)continue;
-            auto next_node = _graph->getNodeFromIndex_1d(node_1d);
-            _drawExplorationNode(node_1d);
+        for (auto next_node_1d : current_node->neighbors_1d) {
+            if (_visited_1d.count(next_node_1d) > 0)continue;
+            auto next_node = _graph->getNodeFromIndex_1d(next_node_1d);
+            _drawExplorationNode(next_node_1d);
 
-            const float new_cost = current_node->cost_so_far + current_node->movement_cost;
+            const float new_cost = current_node->cost_so_far + next_node->movement_cost;
             if (next_node->cost_so_far == _goal->cost_so_far
                 || new_cost < next_node->cost_so_far) {
                 next_node->cost_so_far = new_cost;

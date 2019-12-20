@@ -116,7 +116,10 @@ void Graph::_setNodeMovementCosts(int index_1d)
             distance += 1.f;
             if (!_nodeIsDriveable(node->y_pos, node->x_pos - i))
             {
-                node->movement_cost = _base_movement_cost + _obstacle_cost_factor * ((_cell_size-distance)/_cell_size);
+                //float obstacle_corrected = _obstacle_cost_factor / std::log(getNumberOfNodes());
+                float obstacle_corrected = _obstacle_cost_factor + getNumberOfNodes() / getMaxHeight();
+
+                node->movement_cost = base_movement_cost + obstacle_corrected * ((_cell_size - distance )/_cell_size);
                 break;
             }
         }
@@ -130,7 +133,10 @@ void Graph::_setNodeMovementCosts(int index_1d)
             distance += 1.f;
             if (!_nodeIsDriveable(node->y_pos, node->x_pos + i))
             {
-                node->movement_cost = std::max(node->movement_cost, _base_movement_cost + _obstacle_cost_factor * ((_cell_size - distance) / _cell_size));
+                //float obstacle_corrected = _obstacle_cost_factor / std::log(getNumberOfNodes());
+                float obstacle_corrected = _obstacle_cost_factor + getNumberOfNodes() / getMaxHeight();
+
+                node->movement_cost = std::max(node->movement_cost, base_movement_cost + obstacle_corrected * ((_cell_size - distance) / _cell_size));
                 break;
             }
         }
@@ -144,7 +150,7 @@ void Graph::_setNodeMovementCosts(int index_1d)
             distance += 1.f;
             if (!_nodeIsDriveable(node->y_pos - i, node->x_pos))
             {
-                node->movement_cost = std::max(node->movement_cost, _base_movement_cost + _obstacle_cost_factor * ((_cell_size - distance) / _cell_size));
+                node->movement_cost = std::max(node->movement_cost, base_movement_cost + _obstacle_cost_factor * ((_cell_size - distance) / _cell_size));
                 break;
             }
         }
@@ -158,7 +164,7 @@ void Graph::_setNodeMovementCosts(int index_1d)
             distance += 1.f;
             if (!_nodeIsDriveable(node->y_pos + i, node->x_pos))
             {
-                node->movement_cost = std::max(node->movement_cost, _base_movement_cost + _obstacle_cost_factor * ((_cell_size - distance) / _cell_size));
+                node->movement_cost = std::max(node->movement_cost, base_movement_cost + _obstacle_cost_factor * ((_cell_size - distance) / _cell_size));
                 break;
             }
         }
@@ -242,7 +248,7 @@ void Graph::_drawNodeText(cv::Mat& canvas, std::vector<Node>::value_type node)
 
 cv::Scalar Graph::_getNodeColor(Node& node) {
 	double blue = 0.0;
-	double penalty = node.movement_cost - base_cost;
+    double penalty = node.movement_cost - base_movement_cost;
 	double green = 255 - (255 * penalty);
 	double red = 0 + (255 * penalty);
 	return cv::Scalar(blue, green, red);
@@ -253,12 +259,22 @@ void Graph::drawNodeCosts(cv::Mat& canvas) {
 	{
 		cv::circle(canvas, cv::Point(node.x_pos, node.y_pos), _node_radius+3, _getNodeColor(node), _thickness+2);
 		_drawNodeText(canvas, node);
+        if (_node_cost_text_should_be_shown)
+        {
+            putText(canvas, std::to_string(node.movement_cost), cv::Point(node.x_pos + 1, node.y_pos + 1),
+                cv::FONT_HERSHEY_PLAIN, 0.6, cv::Scalar(0, 0, 0), 1);
+        }
 	}
 }
 
 void Graph::setDrawNodeTextIsShown(bool isShown)
 {
     _node_text_should_be_shown = isShown;
+}
+
+void Graph::setDrawNodeCostTextIsShown(bool isShown)
+{
+    _node_cost_text_should_be_shown = isShown;
 }
 
 void Graph::_drawNodes(cv::Mat& canvas)
