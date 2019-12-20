@@ -1,7 +1,7 @@
 set(SOURCE_FILES 
 	ParoValMVP.ui
-	ParoValMVP.h
-    ParoValMVP.cpp
+	MVPMainWindow.h
+    MVPMainWindow.cpp
     main.cpp
     ParoValMVP.qrc
 	AppQt.hpp

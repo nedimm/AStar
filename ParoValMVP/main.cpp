@@ -1,12 +1,12 @@
 #pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:mainCRTStartup")
 
-#include "ParoValMVP.h"
+#include "MVPMainWindow.h"
 #include <QApplication>
 
 int main(int argc, char *argv[])
 {
     QApplication qApplication(argc, argv);
-    ParoValMVP parovalMain;
-    parovalMain.show();
+    MVPMainWindow mainWindow;
+    mainWindow.show();
     return qApplication.exec();
 }

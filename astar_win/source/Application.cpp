@@ -72,7 +72,7 @@ void Application::_loadMap()
 void Application::_showMap()
 {
     if (_show_visualization == false)return;
-    cv::imshow("A* Visualization", _map->getCanvas());
+    cv::imshow("ParOVal Path Visualization", _map->getCanvas());
     cv::waitKey(1);
 }
 

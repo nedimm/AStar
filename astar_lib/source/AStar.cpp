@@ -14,7 +14,7 @@ void AStar::_drawNode(const int current, int radius, cv::Scalar color, int thick
 {
         auto node = _graph->getNodeFromIndex_1d(current);
         cv::circle(_canvas, cv::Point(node->x_pos, node->y_pos), radius, color, thickness);
-        cv::imshow("A* Visualization", _canvas);
+        cv::imshow("ParOVal Path Visualization", _canvas);
         cv::waitKey(1);
 }
 

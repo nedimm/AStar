@@ -232,7 +232,7 @@ void Graph::drawGraph(cv::Mat& canvas)
 
 void Graph::_drawNodeText(cv::Mat& canvas, std::vector<Node>::value_type node)
 {
-    if (!_draw_node_text)return;
+    if (!_node_text_should_be_shown)return;
     //cv::String text = cv::String( "(" +std::to_string(node.x_index) + "," + std::to_string(node.y_index) + "," + std::to_string(node.index_1d) + ")");
     cv::String text = cv::String(std::to_string(node.index_1d));
 
@@ -256,6 +256,10 @@ void Graph::drawNodeCosts(cv::Mat& canvas) {
 	}
 }
 
+void Graph::setDrawNodeTextIsShown(bool isShown)
+{
+    _node_text_should_be_shown = isShown;
+}
 
 void Graph::_drawNodes(cv::Mat& canvas)
 {
@@ -281,6 +285,11 @@ void Graph::_drawEdges(cv::Mat& canvas)
 Node* Graph::getNodeFromIndex_1d(int index_1d)
 {
     return &_nodes[index_1d];
+}
+
+int Graph::getNumberOfNodes()
+{
+    return _nodes.size();
 }
 
 bool Graph::_nodeIsDriveable(int row, int column)

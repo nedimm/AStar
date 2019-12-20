@@ -10,7 +10,7 @@ void Path::drawPath() {
 		auto end = _graph->getNodeFromIndex_1d(_path[i+1]);
 		cv::line(_canvas, cv::Point(start->x_pos, start->y_pos), cv::Point(end->x_pos, end->y_pos), _path_color, _thickness);
 	}
-    cv::imshow("A* Visualization", _canvas);
+    cv::imshow("ParOVal Path Visualization", _canvas);
     cv::waitKey(1);
 }
 
@@ -53,7 +53,7 @@ void Path::drawSmoothPath()
         auto end = cv::Point(_smooth_path[i+1][0], _smooth_path[i+1][1]);
         cv::line(_canvas, start, end, _smooth_path_color, _thickness);
     }
-    cv::imshow("A* Visualization", _canvas);
+    cv::imshow("ParOVal Path Visualization", _canvas);
     cv::waitKey(1);
 }
 
