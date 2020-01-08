@@ -20,9 +20,9 @@ public:
 
     float base_movement_cost = 1.0f;
     int getNumberOfNodes();
+    bool nodeIsDriveable(int i, int j)const;
 
 protected:
-    bool _nodeIsDriveable(int i, int j);
     void _createNodes();
     void _addLeftNeighbor(const Node& node);
     void _addBottomNeighbor(const Node& node);

@@ -48,7 +48,7 @@ void Graph::_createNodes()
         std::vector<int> node_index_row;
         for (int j = 0; j < _width; j += _cell_size)
         {
-            if (_nodeIsDriveable(i, j))
+            if (nodeIsDriveable(i, j))
             {
                 node_index_row.push_back(cnt);
                 _nodes.push_back({ static_cast<float>(j),static_cast<float>(i),j/_cell_size,i/_cell_size, cnt++ });
@@ -74,7 +74,7 @@ void Graph::_addLeftNeighbor(const Node& node)
         bool could_be_driveable = true;
         while(left_coordinate >= node.x_pos - _cell_size && could_be_driveable)
         {
-            could_be_driveable = _nodeIsDriveable(node.y_pos, left_coordinate--);
+            could_be_driveable = nodeIsDriveable(node.y_pos, left_coordinate--);
         }
         if (could_be_driveable)
         {
@@ -93,7 +93,7 @@ void Graph::_addBottomNeighbor(const Node& node)
         bool could_be_driveable = true;
         while (bottom_coordinate <= node.y_pos + _cell_size && could_be_driveable)
         {
-            could_be_driveable = _nodeIsDriveable(bottom_coordinate++, node.x_pos);
+            could_be_driveable = nodeIsDriveable(bottom_coordinate++, node.x_pos);
         }
         if (could_be_driveable)
         {
@@ -114,7 +114,7 @@ void Graph::_setNodeMovementCosts(int index_1d)
         for (int i = 1; i < _cell_size; ++i)
         {
             distance += 1.f;
-            if (!_nodeIsDriveable(node->y_pos, node->x_pos - i))
+            if (!nodeIsDriveable(node->y_pos, node->x_pos - i))
             {
                 //float obstacle_corrected = _obstacle_cost_factor / std::log(getNumberOfNodes());
                 float obstacle_corrected = _obstacle_cost_factor + getNumberOfNodes() / getMaxHeight();
@@ -131,7 +131,7 @@ void Graph::_setNodeMovementCosts(int index_1d)
         for (int i = 1; i < _cell_size; ++i)
         {
             distance += 1.f;
-            if (!_nodeIsDriveable(node->y_pos, node->x_pos + i))
+            if (!nodeIsDriveable(node->y_pos, node->x_pos + i))
             {
                 //float obstacle_corrected = _obstacle_cost_factor / std::log(getNumberOfNodes());
                 float obstacle_corrected = _obstacle_cost_factor + getNumberOfNodes() / getMaxHeight();
@@ -148,7 +148,7 @@ void Graph::_setNodeMovementCosts(int index_1d)
         for (int i = 1; i < _cell_size; ++i)
         {
             distance += 1.f;
-            if (!_nodeIsDriveable(node->y_pos - i, node->x_pos))
+            if (!nodeIsDriveable(node->y_pos - i, node->x_pos))
             {
                 node->movement_cost = std::max(node->movement_cost, base_movement_cost + _obstacle_cost_factor * ((_cell_size - distance) / _cell_size));
                 break;
@@ -162,7 +162,7 @@ void Graph::_setNodeMovementCosts(int index_1d)
         for (int i = 1; i < _cell_size; ++i)
         {
             distance += 1.f;
-            if (!_nodeIsDriveable(node->y_pos + i, node->x_pos))
+            if (!nodeIsDriveable(node->y_pos + i, node->x_pos))
             {
                 node->movement_cost = std::max(node->movement_cost, base_movement_cost + _obstacle_cost_factor * ((_cell_size - distance) / _cell_size));
                 break;
@@ -308,7 +308,7 @@ int Graph::getNumberOfNodes()
     return _nodes.size();
 }
 
-bool Graph::_nodeIsDriveable(int row, int column)
+bool Graph::nodeIsDriveable(int row, int column)const
 {
     return _map_image.at<uchar>(row, column);
 }

@@ -42,7 +42,10 @@ void Path::createSmoothPath()
             }
         }    
     }
+
+    _checkCollision();
 }
+
 
 void Path::drawSmoothPath()
 {
@@ -62,12 +65,28 @@ void Path::writeToFile()
     std::ofstream output_file(_output_file_name);
     if (output_file.is_open())
     {
-        output_file << ":\tx\t\ty\t\tz\t\tq\n";
+        output_file << ":\tx\t\ty\t\tz\t\tq\t\tc\n";
+        int cnt = 0;
         for (auto point : _smooth_path)
         {
-            output_file << std::fixed << std::setprecision(2) << "\t" << point[0] << "\t" << point[1] << "\t1000.00\t0.00\n";
+            output_file << std::fixed << std::setprecision(2) << "\t" << point[0] << "\t" << point[1] << "\t1000.00\t0.00\t" << _collision[cnt] <<"\n";
+            cnt++;
         }
         output_file.close();
     }
     else std::cout << "Unable to open file <" << _output_file_name << ">\n";
+}
+
+void Path::_checkCollision()
+{
+    for (int i = 0; i < _smooth_path.size(); ++i)
+    {
+        if (_graph->nodeIsDriveable(int(_smooth_path[i][1]), int(_smooth_path[i][0])))
+        {
+            _collision.push_back(1);
+        }else
+        {
+            _collision.push_back(0);
+        }
+    }
 }

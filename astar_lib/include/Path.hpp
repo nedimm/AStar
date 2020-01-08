@@ -21,10 +21,12 @@ public:
 
 
 protected:
+    void _checkCollision();
 	cv::Mat& _canvas;
 	std::shared_ptr<Graph> _graph;
 	std::vector<int> _path;
     std::vector<std::vector<float>> _smooth_path;
+    std::vector<int> _collision;
 	cv::Scalar _path_color = cv::Scalar(128, 128, 128);
     cv::Scalar _smooth_path_color = cv::Scalar(0, 0, 255);
     cv::String _output_file_name = "astar_path.txt";
