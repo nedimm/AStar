@@ -12,6 +12,7 @@ public:
     void start();
     void readParametersFromCSV();
     void readParametersFromCommandLine(char** argv);
+    bool thereIsCollision();
 
 
 protected:

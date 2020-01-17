@@ -77,6 +77,11 @@ void Path::writeToFile()
     else std::cout << "Unable to open file <" << _output_file_name << ">\n";
 }
 
+bool Path::thereIsCollision()
+{
+    return _there_is_collision;
+}
+
 void Path::_checkCollision()
 {
     for (int i = 0; i < _smooth_path.size(); ++i)
@@ -86,6 +91,7 @@ void Path::_checkCollision()
             _collision.push_back(1);
         }else
         {
+            _there_is_collision = true;
             _collision.push_back(0);
         }
     }

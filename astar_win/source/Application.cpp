@@ -63,6 +63,11 @@ void Application::readParametersFromCommandLine(char** argv)
     _initialized = true;
 }
 
+bool Application::thereIsCollision()
+{
+    return _path->thereIsCollision();
+}
+
 void Application::_loadMap()
 {
     _map = std::make_shared<Map>(_map_file_name);

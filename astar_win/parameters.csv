@@ -3,6 +3,6 @@
 1,show_visualization,int,1
 2,grid_cell_size,int,40
 3,obstacle_cost_factor,float,1.0
-4,smooth_rate_alpha,float,0.2
-5,smooth_rate_beta,float,0.2
+4,smooth_rate_alpha,float,0.663
+5,smooth_rate_beta,float,0.3
 6,output_file_name,string,"astar_path.txt"

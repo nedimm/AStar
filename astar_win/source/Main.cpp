@@ -12,5 +12,6 @@ int main(int argc, char** argv)
         app.readParametersFromCommandLine(argv);
     }
     app.start();
-    return 0;
+    auto toReturn = app.thereIsCollision();
+    return toReturn;
 }

@@ -18,9 +18,11 @@ public:
     void createSmoothPath();
     void drawSmoothPath();
     void writeToFile();
+    bool thereIsCollision();
 
 
 protected:
+    bool _there_is_collision = false;
     void _checkCollision();
 	cv::Mat& _canvas;
 	std::shared_ptr<Graph> _graph;
