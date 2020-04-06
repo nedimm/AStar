@@ -2,7 +2,10 @@ set(SOURCE_FILES
 	source/Main.cpp
 )
 
+find_package(cpprestsdk REQUIRED)
+
 add_executable(RestClientConsole ${SOURCE_FILES})
+
 set_property(TARGET RestClientConsole ${PROJECT_NAME} PROPERTY VS_DEBUGGER_WORKING_DIRECTORY "$(ProjectDir)$(Configuration)")
 
 target_include_directories(RestClientConsole
@@ -13,7 +16,7 @@ target_include_directories(RestClientConsole
 		$<INSTALL_INTERFACE:include>
 	)
 	
-target_link_libraries(RestClientConsole RestClient)
+target_link_libraries(RestClientConsole RestClient cpprestsdk::cpprest)
 
 foreach(item ${RESOURCE_FILES})
 	add_custom_command(

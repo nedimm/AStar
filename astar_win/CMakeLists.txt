@@ -14,6 +14,8 @@ set(SOURCE_FILES
 set(RESOURCE_FILES 
 	parameters.csv
 	images/testmap_883_556.png
+	images/Parking_01.png
+	images/Parking_02.png
 )
 
 add_executable(AStarWin ${SOURCE_FILES} ${RESOURCE_FILES})

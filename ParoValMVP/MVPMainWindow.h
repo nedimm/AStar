@@ -26,9 +26,12 @@ private slots:
     MVPParams _readUIParams();
     void _applyDefaultParamsToUI();
     void _disableControlElements(bool disable);
+    void on_inputPushButton_pressed();
+    void on_getPushButton_pressed();
     void _correctWrongInput();
     void on_startPushButton_pressed();
     void on_closePushButton_pressed();
+    void on_visualizePushButton_pressed();
     void on_showGridCheckBox_stateChanged();
     void on_showGraphCheckBox_stateChanged();
     void _gridCellSizeChanged();
@@ -51,6 +54,7 @@ private slots:
     void _smoothBetaChanged();
     void on_smoothBetaLineEdit_returnPressed();
     void on_smoothBetaLineEdit_editingFinished();
+    void on_openScenarioComboBox_activated(int index);
 
     void on_randomPointsCheckBox_stateChanged();
     void _startPointChanged();

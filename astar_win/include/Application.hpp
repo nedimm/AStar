@@ -54,6 +54,9 @@ protected:
 	std::shared_ptr<Path> _path;
 	ParameterServer _parameter_server;
 	bool _gridShouldBeShown = false;
+
+    int _start_node_index=0;
+    int _end_node_index=0;
 };
 
 

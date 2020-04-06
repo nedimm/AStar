@@ -6,3 +6,5 @@
 4,smooth_rate_alpha,float,0.2
 5,smooth_rate_beta,float,0.2
 6,output_file_name,string,"astar_path.txt"
+7,start_node_index,int,0
+8,end_node_index,int,10

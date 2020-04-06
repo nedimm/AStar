@@ -17,6 +17,7 @@ public:
 	void drawPath();
     void createSmoothPath();
     void drawSmoothPath();
+    void drawSmoothPath(cv::Scalar color);
     void writeToFile();
     bool thereIsCollision();
 

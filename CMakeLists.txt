@@ -8,4 +8,3 @@ add_subdirectory(rest_client)
 add_subdirectory(rest_client_console)
 
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT AStarWin)
-

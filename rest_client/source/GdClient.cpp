@@ -7,6 +7,8 @@
 #include <iostream>
 #include <sstream>
 
+//#include <json/value.h>
+#include <fstream>
 
 using namespace utility;                    // Common utilities like string conversions
 using namespace web;                        // Common features like URIs.
@@ -18,7 +20,7 @@ using namespace ::pplx;
 using namespace web::json;
 
 
-bool GdClient::alive(){
+bool GdClient::alive() {
     return true;
 }
 
@@ -110,40 +112,31 @@ void GdClient::httpGetFromFlickr()
     flickr_request.wait();
 }
 
-void DisplayJSONValue(web::json::value v)
+std::vector<std::string> ExtractJSONValue(web::json::value v, std::string filter)
 {
+    std::vector<std::string> to_return;
     if (!v.is_null())
     {
-        // Loop over each element in the object
-        for (auto iter = v.as_object().cbegin(); iter != v.as_object().cend(); ++iter)
+        auto ojha = v.to_string();
+        for (int i = 0; i < v.size(); ++i)
         {
-            // It is necessary to make sure that you get the value as const reference
-            // in order to avoid copying the whole JSON value recursively (too expensive for nested objects)
-
-            const string_t &key = iter->first;
-            const value &value = iter->second;
-
-            if (value.is_object() || value.is_array())
+            auto json_record = v.at(i);
+            auto json_object = json_record.as_object();
+            // Loop over each element in the object
+            for (auto iter = json_object.cbegin(); iter != json_object.cend(); ++iter)
             {
-                // We have an object with children or an array
-                if (!key.empty())
+                string_t key = iter->first;
+                auto value = iter->second.as_string();
+                auto converted = std::string(key.begin(), key.end());
+                if (converted == filter)
                 {
-                    std::wcout << L"Parent: " << key << std::endl;
+                    to_return.push_back(std::string(value.begin(), value.end()));
                 }
-                // Loop over each element in the object by calling DisplayJSONValue
-                DisplayJSONValue(value);
-                if (!key.empty())
-                {
-                    std::wcout << L"End of Parent: " << key << std::endl;
-                }
-            }
-            else
-            {
-                // Always display the value as a string
-                std::wcout << L"Key: " << key << L", Value: " << value.to_string() << std::endl;
             }
         }
+        
     }
+    return to_return;
 }
 
 void GdClient::getJson()
@@ -161,63 +154,64 @@ void GdClient::getJson()
         .request(request)
         // The following code executes when the response is available
         .then([](http_response response) -> pplx::task<json::value>
-        {
-            std::wostringstream stream;
-            stream.str(std::wstring());
-            stream << L"Content type: " << response.headers().content_type() << std::endl;
-            stream << L"Content length: " << response.headers().content_length() << L"bytes" << std::endl;
-            std::wcout << stream.str();
+    {
+        std::wostringstream stream;
+        stream.str(std::wstring());
+        stream << L"Content type: " << response.headers().content_type() << std::endl;
+        stream << L"Content length: " << response.headers().content_length() << L"bytes" << std::endl;
+        std::wcout << stream.str();
 
-            // If the status is OK extract the body of the response into a JSON value
-            if (response.status_code() == status_codes::OK)
-            {
-                return response.extract_json();
-            }
-            else
-            {
-                // return an empty JSON value
-                return pplx::task_from_result(json::value());
-            }
-            // Continue when the JSON value is available
-        }).then([](pplx::task<json::value> previousTask)
+        // If the status is OK extract the body of the response into a JSON value
+        if (response.status_code() == status_codes::OK)
         {
-            // Get the JSON value from the task and call the DisplayJSONValue method
-            try
-            {
-                json::value const & value = previousTask.get();
-                DisplayJSONValue(value);
-            }
-            catch (http_exception const & e)
-            {
-                std::wcout << e.what() << std::endl;
-            }
-        });
+            return response.extract_json();
+        }
+        else
+        {
+            // return an empty JSON value
+            return pplx::task_from_result(json::value());
+        }
+        // Continue when the JSON value is available
+    }).then([](pplx::task<json::value> previousTask)
+    {
+        // Get the JSON value from the task and call the DisplayJSONValue method
+        try
+        {
+            json::value const & value = previousTask.get();
+            //DisplayJSONValue(value);
+        }
+        catch (http_exception const & e)
+        {
+            std::wcout << e.what() << std::endl;
+        }
+    });
 
     std::wcout << L"Calling HTTPGetAsync..." << std::endl;
     // In this case, I call wait. However, you won’t usually want to wait for the asynchronous operations
     json_request.wait();
 }
 
-void GdClient::getImage()
+void GdClient::getImage(std::string file_name)
 {
     auto fileStream = std::make_shared<ostream>();
+    auto file_name_t = utility::conversions::to_string_t(file_name);
 
     // Open stream to output file.
-    pplx::task<void> requestTask = fstream::open_ostream(U("testmap_883_556_downloaded.png")).then([=](ostream outFile)
+    pplx::task<void> requestTask = fstream::open_ostream(file_name_t).then([=](ostream outFile)
     {
         *fileStream = outFile;
 
         http_client_config config;
-        credentials cred(L"", L"");
-        config.set_proxy(web::web_proxy(web::uri(utility::conversions::to_string_t(""))));
+        credentials cred(L"foo", L"bar");
+        config.set_proxy(web::web_proxy(web::uri(utility::conversions::to_string_t("http://proxy.in.audi.vwg:8080/"))));
         config.set_credentials(cred);
         config.set_validate_certificates(false);
         // Create http_client to send the request.
-        http_client client(U(""), config);
+        http_client client(U("https://poc-scenariodatabase.westeurope.cloudapp.azure.com/poc/database/"), config);
 
         // Build request URI and start the request.
         uri_builder builder(U("/download"));
-        builder.append_query(U("filename"), U("testmap_883_556.png"));
+        builder.append_query(U("filename"), file_name_t);
         return client.request(methods::GET, builder.to_string());
     })
 
@@ -247,6 +241,199 @@ void GdClient::getImage()
     }
 }
 
+std::vector<std::string> GdClient::getFileNames()
+{
+    std::vector<std::string> to_return;
+
+    http_client_config config;
+    credentials cred(L"foo", L"bar");
+    config.set_proxy(web::web_proxy(web::uri(utility::conversions::to_string_t("http://proxy.in.audi.vwg:8080/"))));
+    config.set_credentials(cred);
+    config.set_validate_certificates(false);
+    // Create http_client to send the request.
+    
+    auto requestJson = http_client(U("https://poc-scenariodatabase.westeurope.cloudapp.azure.com/poc/database/"), config)
+        .request(methods::GET,
+            uri_builder(U("/_search")).to_string())
+
+        // Get the response.
+        .then([](http_response response) {
+        // Check the status code.
+        if (response.status_code() != 200) {
+            throw std::runtime_error("Returned " + std::to_string(response.status_code()));
+        }
+        else {
+            // Convert the response body to JSON object.
+            return response.extract_json();
+        }
+    })
+    
+    .then([](pplx::task<json::value> previousTask)
+    {
+        // Get the JSON value from the task and call the DisplayJSONValue method
+        try
+        {
+            json::value const & value = previousTask.get();
+            return ExtractJSONValue(value, "filename");
+        }
+        catch (http_exception const & e)
+        {
+            std::wcout << e.what() << std::endl;
+        }
+    });
+    
+    // Wait for the concurrent tasks to finish.
+    try {
+        requestJson.wait();
+        return requestJson.get();
+    }
+    catch (const std::exception &e) {
+        auto what = e.what();
+        printf("Error exception:%s\n", what);
+    }
+
+    return to_return;
+}
+
+//std::vector<std::string> GdClient::getFileNames()
+//{
+//    std::vector<std::string> to_return;
+//
+//    http_client_config config;
+//    credentials cred(L"foo", L"bar");
+//    config.set_proxy(web::web_proxy(web::uri(utility::conversions::to_string_t("http://proxy.in.audi.vwg:8080/"))));
+//    config.set_credentials(cred);
+//    config.set_validate_certificates(false);
+//    // Create http_client to send the request.
+//    
+//    auto requestJson = http_client(U("https://poc-scenariodatabase.westeurope.cloudapp.azure.com/poc/database/"), config)
+//        .request(methods::GET,
+//            uri_builder(U("/_search")).to_string())
+//
+//        // Get the response.
+//        .then([](http_response response) {
+//        // Check the status code.
+//        if (response.status_code() != 200) {
+//            throw std::runtime_error("Returned " + std::to_string(response.status_code()));
+//        }
+//
+//        // Convert the response body to JSON object.
+//        return response.extract_json();
+//    })
+//    //    .then([](pplx::task<json::value> previousTask)
+//    //{
+//    //    // Get the JSON value from the task and call the DisplayJSONValue method
+//    //    try
+//    //    {
+//    //        json::value const & value = previousTask.get();
+//    //        DisplayJSONValue(value);
+//    //    }
+//    //    catch (http_exception const & e)
+//    //    {
+//    //        std::wcout << e.what() << std::endl;
+//    //    }
+//    //});
+//        .then([](json::value jsonObject) {
+//        for (auto iter = jsonObject.as_object().cbegin(); iter != jsonObject.as_object().cend(); ++iter)
+//        {
+//            // It is necessary to make sure that you get the value as const reference
+//            // in order to avoid copying the whole JSON value recursively (too expensive for nested objects)
+//
+//            const string_t &key = iter->first;
+//            const value &value = iter->second;
+//
+//            if (value.is_object() || value.is_array())
+//            {
+//                // We have an object with children or an array
+//                if (!key.empty())
+//                {
+//                    std::wcout << L"Parent: " << key << std::endl;
+//                }
+//                // Loop over each element in the object by calling DisplayJSONValue
+//                DisplayJSONValue(value);
+//                if (!key.empty())
+//                {
+//                    std::wcout << L"End of Parent: " << key << std::endl;
+//                }
+//            }
+//            else
+//            {
+//                // Always display the value as a string
+//                std::wcout << L"Key: " << key << L", Value: " << value.to_string() << std::endl;
+//            }
+//        }
+//
+//
+//        return jsonObject;
+//    });
+//
+//    // Wait for the concurrent tasks to finish.
+//    try {
+//        requestJson.wait();
+//        //auto ojha = requestJson.get();
+//    }
+//    catch (const std::exception &e) {
+//        printf("Error exception:%s\n", e.what());
+//    }
+//
+//    return to_return;
+//
+//}
+
+//std::vector<std::string> GdClient::getFileNamesAsFile()
+//{
+//    std::vector<std::string> to_return;
+//    auto fileStream = std::make_shared<ostream>();
+//
+//    // Open stream to output file.
+//    pplx::task<void> requestTask = fstream::open_ostream(U("filenames.json")).then([=](ostream outFile)
+//    {
+//        *fileStream = outFile;
+//
+//        http_client_config config;
+//        credentials cred(L"foo", L"bar");
+//        config.set_proxy(web::web_proxy(web::uri(utility::conversions::to_string_t("http://proxy.in.audi.vwg:8080/"))));
+//        config.set_credentials(cred);
+//        config.set_validate_certificates(false);
+//        // Create http_client to send the request.
+//        http_client client(U("https://poc-scenariodatabase.westeurope.cloudapp.azure.com/poc/database/"), config);
+//
+//        // Build request URI and start the request.
+//        uri_builder builder(U("/_search"));
+//        return client.request(methods::GET, builder.to_string());
+//    })
+//
+//        // Handle response headers arriving.
+//        .then([=](http_response response)
+//    {
+//        printf("Received response status code:%u\n", response.status_code());
+//
+//        // Write response body into the file.
+//        return response.body().read_to_end(fileStream->streambuf());
+//    })
+//
+//        // Close the file stream.
+//        .then([=](size_t)
+//    {
+//        return fileStream->close();
+//    });
+//
+//    // Wait for all the outstanding I/O to complete and handle any exceptions
+//    try
+//    {
+//        requestTask.wait();
+//    }
+//    catch (const std::exception &e)
+//    {
+//        printf("Error exception:%s\n", e.what());
+//    }
+//
+//
+//
+//    //to_return.push_back("jako");
+//    //to_return.push_back("ojha");
+//    return to_return;
+//}
 
 
 

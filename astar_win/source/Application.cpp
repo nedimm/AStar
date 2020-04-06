@@ -33,7 +33,8 @@ void Application::readParametersFromCSV() {
     _smooth_rate_alpha = _parameter_server.getParameter("smooth_rate_alpha");
     _smooth_rate_beta = _parameter_server.getParameter("smooth_rate_beta");
     _output_file_name = _parameter_server.getParameterString("output_file_name");
-
+    _start_node_index = _parameter_server.getParameter("start_node_index");
+    _end_node_index = _parameter_server.getParameter("end_node_index");
     _initialized = true;
 }
 
@@ -59,6 +60,12 @@ void Application::readParametersFromCommandLine(char** argv)
 
     std::istringstream fn(argv[7]);
     if (!(fn >> _output_file_name))return;
+
+    std::istringstream start_index(argv[8]);
+    if (!(start_index >> _start_node_index))return;
+
+    std::istringstream end_index(argv[9]);
+    if (!(end_index >> _end_node_index))return;
     
     _initialized = true;
 }
@@ -83,10 +90,8 @@ void Application::_showMap()
 
 void Application::_createAStarPath()
 {
-    //auto start = _graph->getRandomNode();
-    //auto goal = _graph->getRandomNode();
-    auto start = _graph->getNodeFromIndex_1d(120);
-    auto goal = _graph->getNodeFromIndex_1d(204);
+    auto start = _graph->getNodeFromIndex_1d(_start_node_index);
+    auto goal = _graph->getNodeFromIndex_1d(_end_node_index);
 
     AStar astar(_graph, start, goal, _map->getCanvas(), _show_visualization);
     auto path = astar.searchPath();

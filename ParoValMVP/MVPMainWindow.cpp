@@ -1,5 +1,9 @@
 #include "MVPMainWindow.h"
 #include "AppQt.hpp"
+#include <QFileDialog>
+#include "GdClient.hpp"
+#include <experimental/filesystem>
+#include <QMessageBox>
 
 MVPMainWindow::MVPMainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -21,6 +25,18 @@ void MVPMainWindow::_showEventHelper()
 
 MVPParams MVPMainWindow::_readUIParams()
 {
+    _uiParams.mapFileName = _ui.inputLineEdit->text().toStdString();
+    _uiParams.showGrid = _ui.showGridCheckBox->isChecked();
+    _uiParams.gridCellSize = _ui.gridCellSizeLineEdit->text().toInt();
+    _uiParams.showGraph = _ui.showGraphCheckBox->isChecked();
+    _uiParams.showNodeText = _ui.showNodeTextCheckBox->isChecked();
+    _uiParams.showNodeCosts = _ui.showNodeCostsCheckBox->isChecked();
+    _uiParams.obstacleCostFactor = _ui.obstacleCostLineEdit->text().toFloat();
+    _uiParams.smoothAlpha = _ui.smoothAlphaLineEdit->text().toFloat();
+    _uiParams.smoothBeta = _ui.smoothBetaLineEdit->text().toFloat();
+    _uiParams.randomStartEnd = _ui.randomPointsCheckBox->isChecked();
+    _uiParams.startPoint = _ui.startPointLineEdit->text().toInt();
+    _uiParams.endPoint = _ui.endPointLineEdit->text().toInt();
     return _uiParams;
 }
 
@@ -48,6 +64,7 @@ void MVPMainWindow::_disableControlElements(bool disable)
 {
     _ui.inputLineEdit->setDisabled(disable);
     _ui.inputPushButton->setDisabled(disable);
+    _ui.getPushButton->setDisabled(disable);
     _ui.showGridCheckBox->setDisabled(disable);
     _ui.gridCellSizeLineEdit->setDisabled(disable);
     _ui.showGraphCheckBox->setDisabled(disable);
@@ -55,6 +72,41 @@ void MVPMainWindow::_disableControlElements(bool disable)
     _ui.showNodeCostsCheckBox->setDisabled(disable);
     _ui.startPushButton->setDisabled(disable);
     _ui.closePushButton->setDisabled(disable);
+    _ui.visualizePushButton->setDisabled(disable);
+}
+
+void MVPMainWindow::on_inputPushButton_pressed()
+{
+    QString filter = "File Description (*.*)";
+    _ui.inputLineEdit->setText(QFileDialog::getOpenFileName(this, "Select a file...", QDir::currentPath(), filter));
+    _readUIParams();
+    _appQt.setParameters(_uiParams);
+    _appQt.displayEnvironment();
+}
+
+void MVPMainWindow::on_getPushButton_pressed()
+{
+    GdClient gdc;
+    auto file_names = gdc.getFileNames();
+    _ui.openScenarioComboBox->clear();
+    
+    this->setCursor(QCursor(Qt::WaitCursor));
+    for (auto file_name : file_names)
+    {
+        try
+        {
+            gdc.getImage(file_name);
+        }catch (std::exception& ex)
+        {
+            QMessageBox msgBox;
+            QString message = "Problem contacting Cloud:";
+            message.append(ex.what());
+            msgBox.setText(message);
+            msgBox.exec();
+        }
+        _ui.openScenarioComboBox->addItem(file_name.c_str());
+    }
+    this->setCursor(QCursor(Qt::ArrowCursor));
 }
 
 void MVPMainWindow::_correctWrongInput()
@@ -205,6 +257,16 @@ void MVPMainWindow::on_smoothBetaLineEdit_editingFinished()
     _smoothBetaChanged();
 }
 
+void MVPMainWindow::on_openScenarioComboBox_activated(int index)
+{
+    if (index < 0) return;
+    const QString& text = _ui.openScenarioComboBox->currentText();
+    _ui.inputLineEdit->setText(text);
+    _readUIParams();
+    _appQt.setParameters(_uiParams);
+    _appQt.displayEnvironment();
+}
+
 void MVPMainWindow::on_randomPointsCheckBox_stateChanged()
 {
     _uiParams.randomStartEnd = _ui.randomPointsCheckBox->checkState();
@@ -270,6 +332,13 @@ void MVPMainWindow::on_closePushButton_pressed()
 {
     _appQt.close();
     close();
+}
+
+void MVPMainWindow::on_visualizePushButton_pressed()
+{
+    _disableControlElements(true);
+    _appQt.visualizeOptimizationRun();
+    _disableControlElements(false);
 }
 
 

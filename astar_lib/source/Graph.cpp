@@ -147,6 +147,7 @@ void Graph::_setNodeMovementCosts(int index_1d)
         float distance = 0.f;
         for (int i = 1; i < _cell_size; ++i)
         {
+            if (node->y_pos - i < 0)continue;
             distance += 1.f;
             if (!nodeIsDriveable(node->y_pos - i, node->x_pos))
             {
@@ -310,5 +311,7 @@ int Graph::getNumberOfNodes()
 
 bool Graph::nodeIsDriveable(int row, int column)const
 {
+    if (row < 0 || column < 0)return false;
+    if (row >= _map_image.rows || column >= _map_image.cols) return false;
     return _map_image.at<uchar>(row, column);
 }

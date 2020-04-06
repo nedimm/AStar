@@ -11,6 +11,34 @@ void AppQt::setParameters(const MVPParams& params)
         _graph->setDrawNodeTextIsShown(_params.showNodeText);
 }
 
+void AppQt::_showOptimizationRun()
+{
+    if (!_initialized) {
+        QMessageBox msgBox;
+        msgBox.setText("Application was not configured properly.");
+        msgBox.exec();
+        return;
+    }
+    _pathFindingIsRunning = true;
+
+    _loadMap();
+    _createGrid();
+    _showGrid();
+    _createGraph();
+    _showGraph();
+    _showMap();
+    _createAStarPaths();
+    _createSmoothPaths();
+    _showSmoothPaths();
+    _pathFindingIsRunning = false;
+}
+
+void AppQt::visualizeOptimizationRun()
+{
+    _paroval_params = _optimization_run_reader.readOptimizationRun();
+    _showOptimizationRun();
+}
+
 MVPParams AppQt::getParameters()
 {
     return _params;
@@ -45,9 +73,7 @@ void AppQt::start()
     _createGraph();
     _showGraph();
     _showMap();
-    //_showNodeCosts();
     _createAStarPath();
-    _showAStarPath();
     _createSmoothPath();
     _showSmoothPath();
     _exportSmoothPath();
@@ -105,6 +131,32 @@ void AppQt::_createAStarPath()
     _path = std::make_shared<Path>(_map->getCanvas(), path, _graph, _params.smoothAlpha, _params.smoothBeta, _output_file_name);
 }
 
+void AppQt::_createAStarPaths()
+{
+    _paths.clear();
+    for (auto pp : _paroval_params)
+    {
+        std::shared_ptr<Graph> graph = std::make_shared<Graph>(_map->getImage(), _params.gridCellSize, pp.obstacle_cost_factor);
+        graph->createGraph();
+        Node* start;
+        Node* end;
+        if (_params.randomStartEnd)
+        {
+            start = graph->getNodeFromIndex_1d(0);
+            end = graph->getNodeFromIndex_1d(graph->getNumberOfNodes()-1);
+        }
+        else
+        {
+            start = graph->getNodeFromIndex_1d(_params.startPoint);
+            end = graph->getNodeFromIndex_1d(_params.endPoint);
+        }
+
+        AStar astar(graph, start, end, _map->getCanvas(), false);
+        auto path = astar.searchPath();
+        _paths.push_back(std::make_shared<Path>(_map->getCanvas(), path, graph, pp.smooth_rate_alpha, pp.smooth_rate_beta, ""));
+    }
+}
+
 void AppQt::_createGrid()
 {
     _grid = std::make_shared<Grid>(_map->getWidth(), _map->getHeight(), _params.gridCellSize);
@@ -141,9 +193,29 @@ void AppQt::_createSmoothPath()
     _path->createSmoothPath();
 }
 
+void AppQt::_createSmoothPaths()
+{
+    for (auto path : _paths)
+    {
+        path->createSmoothPath();
+    }
+}
+
 void AppQt::_showSmoothPath()
 {
     _path->drawSmoothPath();
+}
+
+void AppQt::_showSmoothPaths()
+{
+    for (int i = 0; i < _paths.size(); ++i)
+    {
+        auto blue = 125 - (i * 255/ _paths.size());
+        auto green = blue;
+        auto red = 255;
+        cv::Scalar color(blue, green, red);
+        _paths[i]->drawSmoothPath(color);
+    }
 }
 
 void AppQt::_exportSmoothPath()

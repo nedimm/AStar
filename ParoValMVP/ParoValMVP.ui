@@ -7,47 +7,18 @@
     <x>0</x>
     <y>0</y>
     <width>600</width>
-    <height>520</height>
+    <height>561</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>ParOVal</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QWidget" name="horizontalLayoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>30</x>
-      <y>0</y>
-      <width>531</width>
-      <height>61</height>
-     </rect>
-    </property>
-    <layout class="QHBoxLayout" name="horizontalLayout">
-     <item>
-      <widget class="QLabel" name="inputImageLabel">
-       <property name="text">
-        <string>Input Image:</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLineEdit" name="inputLineEdit"/>
-     </item>
-     <item alignment="Qt::AlignRight">
-      <widget class="QPushButton" name="inputPushButton">
-       <property name="text">
-        <string>Browse</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
    <widget class="QSplitter" name="splitter">
     <property name="geometry">
      <rect>
       <x>370</x>
-      <y>440</y>
+      <y>480</y>
       <width>191</width>
       <height>23</height>
      </rect>
@@ -76,7 +47,7 @@
     <property name="geometry">
      <rect>
       <x>30</x>
-      <y>60</y>
+      <y>100</y>
       <width>251</width>
       <height>121</height>
      </rect>
@@ -125,7 +96,7 @@
     <property name="geometry">
      <rect>
       <x>310</x>
-      <y>60</y>
+      <y>100</y>
       <width>251</width>
       <height>121</height>
      </rect>
@@ -177,7 +148,7 @@
     <property name="geometry">
      <rect>
       <x>30</x>
-      <y>190</y>
+      <y>230</y>
       <width>531</width>
       <height>231</height>
      </rect>
@@ -370,6 +341,100 @@
       </rect>
      </property>
     </widget>
+   </widget>
+   <widget class="QPushButton" name="visualizePushButton">
+    <property name="geometry">
+     <rect>
+      <x>240</x>
+      <y>480</y>
+      <width>121</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Visualize Optimization</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="inputLineEdit">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>110</x>
+      <y>10</y>
+      <width>341</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="readOnly">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="inputPushButton">
+    <property name="geometry">
+     <rect>
+      <x>460</x>
+      <y>10</y>
+      <width>111</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Browse Local</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="inputImageLabel">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>0</y>
+      <width>81</width>
+      <height>39</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Local File</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_7">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>50</y>
+      <width>111</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>OpenScenario DB</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="openScenarioComboBox">
+    <property name="geometry">
+     <rect>
+      <x>130</x>
+      <y>50</y>
+      <width>321</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="currentText">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="getPushButton">
+    <property name="geometry">
+     <rect>
+      <x>460</x>
+      <y>50</y>
+      <width>111</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Get from Cloud</string>
+    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">

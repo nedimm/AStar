@@ -49,12 +49,17 @@ void Path::createSmoothPath()
 
 void Path::drawSmoothPath()
 {
+    drawSmoothPath(_smooth_path_color);
+}
+
+void Path::drawSmoothPath(cv::Scalar color)
+{
     if (_should_draw_smooth_path == false) return;
 
     for (int i = 0; i < _smooth_path.size() - 1; ++i) {
         auto start = cv::Point(_smooth_path[i][0], _smooth_path[i][1]);
-        auto end = cv::Point(_smooth_path[i+1][0], _smooth_path[i+1][1]);
-        cv::line(_canvas, start, end, _smooth_path_color, _thickness);
+        auto end = cv::Point(_smooth_path[i + 1][0], _smooth_path[i + 1][1]);
+        cv::line(_canvas, start, end, color, _thickness);
     }
     cv::imshow("ParOVal Path Visualization", _canvas);
     cv::waitKey(1);

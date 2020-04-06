@@ -7,11 +7,17 @@ set(SOURCE_FILES
 	AppQt.hpp
 	AppQt.cpp
 	MVPParams.hpp
+	OptimizationRunReader.hpp
+	OptimizationRunReader.cpp
+	ParovalParams.hpp
 )
 
 set(RESOURCE_FILES 
 	parameters.csv
 	images/testmap_883_556.png
+	images/Parking_01.png
+	images/Parking_02.png
+	OptimizationRun.txt
 )
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -57,7 +63,7 @@ add_executable(ParoValMVP WIN32 ${SOURCE_FILES} ${RESOURCE_FILES})
 
 set_property(TARGET ParoValMVP ${PROJECT_NAME} PROPERTY VS_DEBUGGER_WORKING_DIRECTORY "$(ProjectDir)$(Configuration)")
 
-target_link_libraries(ParoValMVP PRIVATE Qt5::Widgets AStar)
+target_link_libraries(ParoValMVP PRIVATE Qt5::Widgets AStar RestClient)
 add_custom_command(TARGET ParoValMVP
         POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_CURRENT_BINARY_DIR}/windeployqt"

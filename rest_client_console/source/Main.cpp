@@ -8,5 +8,5 @@ int main(int argc, char** argv)
 
     //gdc.httpGetFromBing();
    // gdc.httpGetFromFlickr();
-    gdc.getImage();
+    //gdc.getImage();
 }
